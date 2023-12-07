@@ -1,7 +1,7 @@
 # Taipy LLM Chat Demo
 
 <p align="center">
-  <img src="media/rifle-conv.png" alt="A conversation about rifles" width="80%"/>
+  <img src="media/rifle_conv.png" alt="A conversation about rifles" width="100%"/>
 </p>
 
 A simple app to chat with an LLM.
