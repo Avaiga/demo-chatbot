@@ -12,6 +12,7 @@ conversation = {
 current_user_message = ""
 past_conversations = []
 selected_conv = None
+selected_row = [1]
 
 
 def on_init(state: State) -> None:
@@ -28,6 +29,7 @@ def on_init(state: State) -> None:
     state.current_user_message = ""
     state.past_conversations = []
     state.selected_conv = None
+    state.selected_row = [1]
 
 
 def request(state: State, prompt: str) -> str:
@@ -63,6 +65,7 @@ def update_context(state: State) -> None:
     state.context += f"Human: \n {state.current_user_message}\n\n AI:"
     answer = request(state, state.context).replace("\n", "")
     state.context += answer
+    state.selected_row = [len(state.conversation["Conversation"]) + 1]
     return answer
 
 
@@ -155,11 +158,11 @@ def select_conv(state: State, var_name: str, value) -> None:
         value: [[id, conversation]]
     """
     state.conversation = state.past_conversations[value[0][0]][1]
-    # Rewrite context
     state.context = "The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.\n\nHuman: Hello, who are you?\nAI: I am an AI created by OpenAI. How can I help you today? "
     for i in range(2, len(state.conversation["Conversation"]), 2):
         state.context += f"Human: \n {state.conversation['Conversation'][i]}\n\n AI:"
         state.context += state.conversation["Conversation"][i + 1]
+    state.selected_row = [len(state.conversation["Conversation"]) + 1]
 
 
 past_prompts = []
@@ -174,7 +177,7 @@ page = """
 |>
 
 <|part|render=True|class_name=p2 align-item-bottom table|
-<|{conversation}|table|style=style_conv|show_all|width=100%|>
+<|{conversation}|table|style=style_conv|show_all|width=100%|selected={selected_row}|rebuild|>
 <|part|class_name=card mt1|
 <|{current_user_message}|input|label=Write your message here...|on_action=send_message|class_name=fullwidth|>
 |>
