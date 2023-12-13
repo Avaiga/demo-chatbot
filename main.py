@@ -1,4 +1,5 @@
-import os, sys
+import os
+import sys
 
 from taipy.gui import Gui, State, notify
 import openai
@@ -9,6 +10,8 @@ conversation = {
     "Conversation": ["Who are you?", "Hi! I am GPT-3. How can I help you today?"]
 }
 current_user_message = ""
+past_conversations = []
+selected_conv = None
 
 
 def request(state: State, prompt: str) -> str:
@@ -95,18 +98,66 @@ def on_exception(state, function_name: str, ex: Exception) -> None:
     notify(state, "error", f"An error occured in {function_name}: {ex}")
 
 
+def reset_chat(state: State) -> None:
+    """
+    Reset the chat by clearing the conversation.
+
+    Args:
+        - state: The current state of the app.
+    """
+    state.past_conversations = state.past_conversations + [
+        [len(state.past_conversations), state.conversation]
+    ]
+    state.conversation = {
+        "Conversation": ["Who are you?", "Hi! I am GPT-3. How can I help you today?"]
+    }
+
+
+def tree_adapter(item: list) -> [str, str]:
+    """
+    Converts element of past_conversations to id and displayed string
+
+    Args:
+        item: element of past_conversations
+
+    Returns:
+        id and displayed string
+    """
+    identifier = item[0]
+    if len(item[1]["Conversation"]) > 3:
+        return (identifier, item[1]["Conversation"][2][:50] + "...")
+    return (item[0], "Empty conversation")
+
+
+def select_conv(state: State, var_name: str, value) -> None:
+    """
+    Selects conversation from past_conversations
+
+    Args:
+        state: The current state of the app.
+        var_name: "selected_conv"
+        value: [[id, conversation]]
+    """
+    state.conversation = state.past_conversations[value[0][0]][1]
+    # Rewrite context
+    state.context = "The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.\n\nHuman: Hello, who are you?\nAI: I am an AI created by OpenAI. How can I help you today? "
+    for i in range(2, len(state.conversation["Conversation"]), 2):
+        state.context += f"Human: \n {state.conversation['Conversation'][i]}\n\n AI:"
+        state.context += state.conversation["Conversation"][i + 1]
+
+
 past_prompts = []
 
 page = """
 <|layout|columns=300px 1|
 <|part|render=True|class_name=sidebar|
 # Taipy **Chat**{: .color-primary} # {: .logo-text}
-<|New Conversation|button|class_name=fullwidth plain|id=reset_app_button|>
+<|New Conversation|button|class_name=fullwidth plain|id=reset_app_button|on_action=reset_chat|>
 ### Previous activities ### {: .h5 .mt2 .mb-half}
-<|tree|lov={past_prompts[:5]}|class_name=past_prompts_list|multiple|>
+<|{selected_conv}|tree|lov={past_conversations}|class_name=past_prompts_list|multiple|adapter=tree_adapter|on_change=select_conv|>
 |>
 
-<|part|render=True|class_name=p2 align-item-bottom|
+<|part|render=True|class_name=p2 align-item-bottom table|
 <|{conversation}|table|style=style_conv|show_all|width=100%|>
 <|part|class_name=card mt1|
 <|{current_user_message}|input|label=Write your message here...|on_action=send_message|class_name=fullwidth|>
