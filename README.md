@@ -12,6 +12,11 @@ This particular app uses OpenAI's GPT-3 API to generate responses to your messag
 
 A tutorial on how to create this app is available in the <a href="https://docs.taipy.io/en/release-3.0/knowledge_base/tutorials/chatbot/" target="_blank">Taipy documentation</a>
 
+<p align="center">
+  <img src="media/docs.png" alt="LLM Chatbot Tutorial" width="80%"/>
+</p>
+
+
 ## How to Use
 
 **You need an OpenAI account with an active <a href="https://platform.openai.com/api-keys" target="_blank">API key</a>**
