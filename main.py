@@ -7,7 +7,7 @@ import openai
 client = None
 context = "The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.\n\nHuman: Hello, who are you?\nAI: I am an AI created by OpenAI. How can I help you today? "
 conversation = {
-    "Conversation": ["Who are you?", "Hi! I am GPT-3. How can I help you today?"]
+    "Conversation": ["Who are you?", "Hi! I am GPT-4. How can I help you today?"]
 }
 current_user_message = ""
 past_conversations = []
@@ -24,7 +24,7 @@ def on_init(state: State) -> None:
     """
     state.context = "The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.\n\nHuman: Hello, who are you?\nAI: I am an AI created by OpenAI. How can I help you today? "
     state.conversation = {
-        "Conversation": ["Who are you?", "Hi! I am GPT-3. How can I help you today?"]
+        "Conversation": ["Who are you?", "Hi! I am GPT-4. How can I help you today?"]
     }
     state.current_user_message = ""
     state.past_conversations = []
@@ -34,7 +34,7 @@ def on_init(state: State) -> None:
 
 def request(state: State, prompt: str) -> str:
     """
-    Send a prompt to the GPT-3 API and return the response.
+    Send a prompt to the GPT-4 API and return the response.
 
     Args:
         - state: The current state of the app.
@@ -50,7 +50,7 @@ def request(state: State, prompt: str) -> str:
                 "content": f"{prompt}",
             }
         ],
-        model="gpt-3.5-turbo",
+        model="gpt-4-turbo-preview",
     )
     return response.choices[0].message.content
 
@@ -128,7 +128,7 @@ def reset_chat(state: State) -> None:
         [len(state.past_conversations), state.conversation]
     ]
     state.conversation = {
-        "Conversation": ["Who are you?", "Hi! I am GPT-3. How can I help you today?"]
+        "Conversation": ["Who are you?", "Hi! I am GPT-4. How can I help you today?"]
     }
 
 
