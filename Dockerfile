@@ -18,6 +18,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy the application source code.
+COPY main.css .
 COPY main.py .
 
 CMD ["taipy", "run", "--no-debug", "--no-reloader", "main.py", "-H", "0.0.0.0", "-P", "5000"]
