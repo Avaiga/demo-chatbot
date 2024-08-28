@@ -33,10 +33,14 @@ git clone https://github.com/Avaiga/demo-llm-chat.git
 pip install -r requirements.txt
 ```
 
-3. Run the app using your API key as an argument:
+3. Create a `.env` file in the root directory with the following content:
 
 ```bash
-python main.py sk-XXXXX...XXXXX
+OPENAI_API_KEY=sk-...
 ```
 
-(You can also set the `OPENAI_API_KEY` environment variable instead of passing it as an argument)
+4. Run the app:
+
+```bash
+python main.py
+```

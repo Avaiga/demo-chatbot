@@ -4,6 +4,8 @@ import sys
 from taipy.gui import Gui, State, notify
 import openai
 
+from dotenv import load_dotenv
+
 client = None
 context = "The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.\n\nHuman: Hello, who are you?\nAI: I am an AI created by OpenAI. How can I help you today? "
 conversation = {
@@ -186,15 +188,8 @@ page = """
 """
 
 if __name__ == "__main__":
-    if "OPENAI_API_KEY" in os.environ:
-        api_key = os.environ["OPENAI_API_KEY"]
-    elif len(sys.argv) > 1:
-        api_key = sys.argv[1]
-    else:
-        raise ValueError(
-            "Please provide the OpenAI API key as an environment variable OPENAI_API_KEY or as a command line argument."
-        )
+    load_dotenv()
 
-    client = openai.Client(api_key=api_key)
+    client = openai.Client(api_key=os.getenv("OPENAI_API_KEY"))
 
     Gui(page).run(debug=True, dark_mode=True, use_reloader=True, title="💬 Taipy Chat")
