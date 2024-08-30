@@ -1,0 +1,37 @@
+# This file was automatically generated.
+# Please, do not edit it manually.
+
+name: Build Docker Image develop
+
+on:
+  release:
+    types:
+      - prereleased
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    environment: develop
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Login to ACR'
+        run: |
+          az acr login --name ${{ vars.DOCKER_REGISTRY }}
+
+      - name: 'Build & push image'
+        run: |
+          docker build -t ${{ vars.DOCKER_REGISTRY }}/chatbot:develop .
+          docker push ${{ vars.DOCKER_REGISTRY }}/chatbot:develop
