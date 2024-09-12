@@ -33,5 +33,5 @@ jobs:
 
       - name: 'Build & push image'
         run: |
-          docker build -t ${{ vars.DOCKER_REGISTRY }}/chatbot:develop .
-          docker push ${{ vars.DOCKER_REGISTRY }}/chatbot:develop
+          docker build -t ${{ vars.DOCKER_REGISTRY }}/demo-llm-chat:develop .
+          docker push ${{ vars.DOCKER_REGISTRY }}/demo-llm-chat:develop
